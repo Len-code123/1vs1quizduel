@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1vs1 Quizspiel</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    let currentQuestion = 0;
+    const questions = [
+      { q: "Wer lebt in einer Ananas ganz tief im Meer?", a: "SpongeBob Schwammkopf" },
+      { q: "Welcher Zauberer trägt eine Blitznarbe auf der Stirn?", a: "Harry Potter" },
+      { q: "Wie heißt die Schule von Harry Potter?", a: "Hogwarts" },
+      { q: "Wer ist der Erzfeind von Batman?", a: "Joker" },
+      { q: "Welches Tier kann rückwärts fliegen?", a: "Kolibri" },
+      { q: "Was ist das größte Tier auf der Erde?", a: "Blauwal" },
+      { q: "Welches Tier legt die größten Eier?", a: "Strauß" },
+      { q: "Welcher Planet ist der Erde am ähnlichsten?", a: "Mars" },
+      { q: "Was ist das schwerste landlebende Tier?", a: "Elefant" },
+      { q: "Welcher Kontinent hat die meisten wilden Tiere?", a: "Afrika" }
+    ];
+
+    let timer;
+    let timeLeft = 60;
+
+    function startTimer() {
+      document.getElementById('time').textContent = timeLeft;
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('time').textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function startGame() {
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('gameScreen').classList.remove('hidden');
+      showQuestion();
+      startTimer();
+    }
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        document.getElementById('question').textContent = "Spiel beendet!";
+        document.getElementById('answerInput').classList.add('hidden');
+        document.getElementById('submitAnswer').classList.add('hidden');
+        clearInterval(timer);
+        return;
+      }
+      document.getElementById('question').textContent = questions[currentQuestion].q;
+      document.getElementById('answerInput').value = "";
+      timeLeft = 60;
+    }
+
+    function checkAnswer() {
+      const input = document.getElementById('answerInput').value.trim().toLowerCase();
+      const correct = questions[currentQuestion].a.toLowerCase();
+      if (input === correct) {
+        alert('Richtig!');
+      } else {
+        alert(`Falsch! Die richtige Antwort war: ${questions[currentQuestion].a}`);
+      }
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      showQuestion();
+      startTimer();
+    }
+  </script>
+</head>
+<body class="bg-blue-50 font-sans">
+  <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div id="startScreen">
+      <h1 class="text-2xl font-bold mb-4">1vs1 Quizspiel</h1>
+      <p class="mb-4">Erstelle oder trete einem Spiel mit Code bei</p>
+      <button onclick="startGame()" class="bg-blue-500 text-white px-4 py-2 rounded">Spiel starten</button>
+    </div>
+    <div id="gameScreen" class="hidden">
+      <div class="mb-4">
+        <p id="question" class="text-lg font-semibold"></p>
+      </div>
+      <div class="mb-4">
+        <input id="answerInput" type="text" class="w-full border p-2 rounded" placeholder="Deine Antwort...">
+      </div>
+      <button id="submitAnswer" onclick="checkAnswer()" class="bg-green-500 text-white px-4 py-2 rounded">Antwort senden</button>
+      <div class="mt-4">
+        <p>Zeit verbleibend: <span id="time">60</span> Sekunden</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
